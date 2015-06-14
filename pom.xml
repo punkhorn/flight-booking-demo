@@ -22,10 +22,9 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<!-- dependency versions -->
-		<camel-sap-version>6.2.0.redhat-114</camel-sap-version>
+		<camel-sap-version>6.2.0.redhat-SNAPSHOT</camel-sap-version>
 		<camel-version>2.14.1</camel-version>
 		<fabric.version>1.2.0.redhat-093</fabric.version>
-		<slf4j-api-version>1.7.5</slf4j-api-version>
 		<slf4j-version>1.7.5</slf4j-version>
 		<log4j-version>1.2.17</log4j-version>
 		<sapjco3-version>3.0.11</sapjco3-version>
@@ -33,11 +32,66 @@
 		<!-- plugin versions -->
 		<maven-compiler-plugin-version>2.5.1</maven-compiler-plugin-version>
 		<maven-resources-plugin-version>2.6</maven-resources-plugin-version>
-		<camel-maven-plugin-version>2.12.0.redhat-610379</camel-maven-plugin-version>
+		<camel-maven-plugin-version>2.14.1</camel-maven-plugin-version>
 		<maven-bundle-plugin-version>2.3.7</maven-bundle-plugin-version>
 		<build-helper-maven-plugin-version>1.8</build-helper-maven-plugin-version>
 		<fabric8-maven-plugin-version>1.2.0.redhat-102</fabric8-maven-plugin-version>
 	</properties>
+
+	<dependencies>
+		<!-- Camel SAP -->
+		<dependency>
+			<groupId>org.fusesource</groupId>
+			<artifactId>camel-sap</artifactId>
+			<version>${camel-sap-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sap.conn.jco</groupId>
+			<artifactId>sapjco3</artifactId>
+			<version>${sapjco3-version}</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/sapjco3.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>com.sap.conn.idoc</groupId>
+			<artifactId>sapidoc3</artifactId>
+			<version>${sapidoc3-version}</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/sapidoc3.jar</systemPath>
+		</dependency>
+		<!-- Camel -->
+		<dependency>
+			<groupId>org.apache.camel</groupId>
+			<artifactId>camel-core</artifactId>
+			<version>${camel-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.camel</groupId>
+			<artifactId>camel-blueprint</artifactId>
+			<version>${camel-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.camel</groupId>
+			<artifactId>camel-jaxb</artifactId>
+			<version>${camel-version}</version>
+		</dependency>
+		<!-- logging -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4j-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>${slf4j-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>${log4j-version}</version>
+		</dependency>
+	</dependencies>
 
 	<build>
 		<defaultGoal>install</defaultGoal>
@@ -75,7 +129,14 @@
 					</instructions>
 				</configuration>
 			</plugin>
-
+			<plugin>
+				<groupId>org.apache.camel</groupId>
+				<artifactId>camel-maven-plugin</artifactId>
+				<version>${camel-maven-plugin-version}</version>
+				<configuration>
+					<useBlueprint>true</useBlueprint>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 
