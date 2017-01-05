@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.jboss.fuse.sap</groupId>
 	<artifactId>flight-booking-demo</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>6.3.0.redhat-187</version>
 	<packaging>bundle</packaging>
 	<name>The Flight Booking Demo</name>
 	<description>The Flight Booking Demo demonstrating the integration of JBoss Fuse with SAP</description>
@@ -22,20 +22,21 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<!-- dependency versions -->
-		<camel-sap-version>6.2.0.redhat-SNAPSHOT</camel-sap-version>
-		<camel-version>2.14.1</camel-version>
-		<fabric.version>1.2.0.redhat-093</fabric.version>
-		<slf4j-version>1.7.5</slf4j-version>
+		<camel-sap-version>6.3.0.redhat-187</camel-sap-version>
+		<camel-version>2.17.0.redhat-630187</camel-version>
+		<fabric.version>1.2.0.redhat-630187</fabric.version>
+		<slf4j-api-version>1.7.7</slf4j-api-version>
+		<slf4j-version>1.7.7</slf4j-version>
 		<log4j-version>1.2.17</log4j-version>
 		<sapjco3-version>3.0.11</sapjco3-version>
 		<sapidoc3-version>3.0.10</sapidoc3-version>
 		<!-- plugin versions -->
 		<maven-compiler-plugin-version>2.5.1</maven-compiler-plugin-version>
 		<maven-resources-plugin-version>2.6</maven-resources-plugin-version>
-		<camel-maven-plugin-version>2.14.1</camel-maven-plugin-version>
+		<camel-maven-plugin-version>2.17.0.redhat-630187</camel-maven-plugin-version>
 		<maven-bundle-plugin-version>2.3.7</maven-bundle-plugin-version>
 		<build-helper-maven-plugin-version>1.8</build-helper-maven-plugin-version>
-		<fabric8-maven-plugin-version>1.2.0.redhat-102</fabric8-maven-plugin-version>
+		<fabric8-maven-plugin-version>1.2.0.redhat-630187</fabric8-maven-plugin-version>
 	</properties>
 
 	<dependencies>
@@ -153,9 +154,9 @@
 			</releases>
 		</repository>
 		<repository>
-			<id>jboss-fuse-ea</id>
-			<name>JBoss Fuse Community Early Access Release Repository</name>
-			<url>https://repository.jboss.org/nexus/content/groups/ea/</url>
+			<id>jboss-fuse-ga</id>
+			<name>JBoss Fuse Community GA Release Repository</name>
+			<url>https://maven.repository.redhat.com/ga/</url>
 			<snapshots>
 				<enabled>false</enabled>
 			</snapshots>
@@ -189,9 +190,9 @@
 			</releases>
 		</pluginRepository>
 		<pluginRepository>
-			<id>jboss-fuse-ea</id>
-			<name>JBoss Fuse Community Early Access Release Repository</name>
-			<url>https://repository.jboss.org/nexus/content/groups/ea/</url>
+			<id>jboss-fuse-ga</id>
+			<name>JBoss Fuse Community GA Release Repository</name>
+			<url>https://maven.repository.redhat.com/ga/</url>
 			<snapshots>
 				<enabled>false</enabled>
 			</snapshots>

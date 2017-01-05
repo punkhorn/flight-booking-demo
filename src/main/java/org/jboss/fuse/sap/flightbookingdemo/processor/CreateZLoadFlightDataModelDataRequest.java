@@ -40,7 +40,7 @@ public class CreateZLoadFlightDataModelDataRequest {
 
 	private static final Logger LOG = LoggerFactory.getLogger(CreateZLoadFlightDataModelDataRequest.class);
 
-	private static final String ISCURR_GDATU = "20150531";
+	private static final String ISCURR_GDATU = "20170531";
 	private static final String ISCURR_KURST = "M";
 	private static final String ISCURR_TCURR = "EUR";
 	

@@ -4,70 +4,56 @@
 	xsi:schemaLocation="http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd
        http://camel.apache.org/schema/blueprint http://camel.apache.org/schema/blueprint/camel-blueprint.xsd">
 
-	<camelContext trace="false" id="flight-booking-demo-context"
-		xmlns="http://camel.apache.org/schema/blueprint">
-		<!-- Reset Flight Booking Data & Load Flight Data Model Data -->
-		<route id="flight-booking-demo-init-route">
-			<from uri="timer://init?repeatCount=1" />
-			<to uri="bean:createZResetFlightDataModelRequest" />
-			<to	uri="sap-qrfc-destination:flbkdemoDest:FLBKDEMOQUEUE:ZRESET_FLIGHT_DATA_MODEL" />
-			<to uri="bean:createZLoadFlightDataModelDataRequest" />
-			<to uri="sap-qrfc-destination:flbkdemoDest:FLBKDEMOQUEUE:ZLOAD_FLIGHT_DATA_MODEL_DATA" />
-			<to uri="bean:createTRfcQinRestartRequest" />
-			<to uri="sap-trfc-destination:flbkdemoDest:TRFC_QIN_RESTART" />
-
-		</route>
-
-		<!--  Process Request to book flight -->
-		<route id="flight-booking-demo-main-route">
-			<from uri="sap-srfc-server:flbkdemoServer:BOOK_FLIGHT" />
-			<unmarshal>
-				<jaxb prettyPrint="true" contextPath="org.jboss.fuse.sap.flightbookingdemo.jaxb" />
-			</unmarshal>
-			<multicast stopOnException="true" strategyRef="aggregateFlightBookingStrategy">
-				<to uri="direct:getFlightConnectionInfo" />
-				<to uri="direct:getFlightCustomerInfo" />
-				<to uri="direct:getPassengerInfo" />
-			</multicast>
-			<to uri="direct:createFlightTrip" />
-			<marshal>
-				<jaxb prettyPrint="true" contextPath="org.jboss.fuse.sap.flightbookingdemo.jaxb" />
-			</marshal>
-		</route>
-		
-		<!-- Look up a matching connection -->
-		<route id="flight-booking-demo-get-connection-info-route">
-			<from uri="direct:getFlightConnectionInfo" />
-			<to uri="bean:createFlightConnectionGetListRequest" />
-			<to uri="sap-srfc-destination:flbkdemoDest:BAPI_FLCONN_GETLIST" />
-			<to uri="bean:createFlightConnectionGetDetailRequest" />
-			<to uri="sap-srfc-destination:flbkdemoDest:BAPI_FLCONN_GETDETAIL" />
-			<to uri="bean:returnFlightConnectionInfo" />
-		</route>
-		
-		<!-- Lookup Travel Agent Info -->
-		<route id="flight-booking-demo-get-customern-info-route">
-			<from uri="direct:getFlightCustomerInfo" />
-			<to uri="bean:createFlightCustomerGetListRequest" />
-			<to uri="sap-srfc-destination:flbkdemoDest:BAPI_FLCUST_GETLIST" />
-			<to uri="bean:returnFlightCustomerInfo" />
-		</route>
-		
-		<!-- Consolidate passenger info into exchange -->
-		<route id="flight-booking-demo-get-passenger-info-route">
-			<from uri="direct:getPassengerInfo" />
-			<to uri="bean:returnPassengerInfo" />
-		</route>
-		
-		<!-- Perform Flight Booking -->
-		<route id="flight-booking-demo-create-flight-booking-route">
-			<from uri="direct:createFlightTrip" />
-			<to uri="bean:createFlightTripRequest" />
-			<to uri="sap-srfc-destination:flbkdemoDest:BAPI_FLTRIP_CREATE?transacted=true" />
-			<to uri="bean:returnFlightTripResponse" />
-		</route>
-
-	</camelContext>
+	<camelContext trace="false" id="flight-booking-demo-context" xmlns="http://camel.apache.org/schema/blueprint">
+  <route id="flight-booking-demo-init-route">
+    <from uri="timer://init?repeatCount=1"/>
+    <to id="createZResetFlightDataModelRequest" uri="bean:createZResetFlightDataModelRequest"/>
+    <to id="ZRESET_FLIGHT_DATA_MODEL" uri="sap-qrfc-destination:flbkdemoDest:FLBKDEMOQUEUE:ZRESET_FLIGHT_DATA_MODEL"/>
+    <to id="createZLoadFlightDataModelDataRequest" uri="bean:createZLoadFlightDataModelDataRequest"/>
+    <to id="ZLOAD_FLIGHT_DATA_MODEL_DATA" uri="sap-qrfc-destination:flbkdemoDest:FLBKDEMOQUEUE:ZLOAD_FLIGHT_DATA_MODEL_DATA"/>
+    <to id="createTRfcQinRestartRequest" uri="bean:createTRfcQinRestartRequest"/>
+    <to id="TRFC_QIN_RESTART" uri="sap-trfc-destination:flbkdemoDest:TRFC_QIN_RESTART"/>
+  </route>
+  <route id="flight-booking-demo-main-route">
+    <from uri="sap-srfc-server:flbkdemoServer:BOOK_FLIGHT"/>
+    <unmarshal id="unmarshalRequest">
+      <jaxb contextPath="org.jboss.fuse.sap.flightbookingdemo.jaxb" prettyPrint="true"/>
+    </unmarshal>
+    <multicast id="collectBookingData" strategyRef="aggregateFlightBookingStrategy" stopOnException="true">
+      <to id="getFlightConnectionInfo" uri="direct:getFlightConnectionInfo"/>
+      <to id="getFlightConnectionInfo" uri="direct:getFlightCustomerInfo"/>
+      <to id="getFlightConnectionInfo" uri="direct:getPassengerInfo"/>
+    </multicast>
+    <to id="createFlightTrip" uri="direct:createFlightTrip"/>
+    <marshal id="marshalResponse">
+      <jaxb contextPath="org.jboss.fuse.sap.flightbookingdemo.jaxb" prettyPrint="true"/>
+    </marshal>
+  </route>
+  <route id="flight-booking-demo-get-connection-info-route">
+    <from uri="direct:getFlightConnectionInfo"/>
+    <to id="createFlightConnectionGetListRequest" uri="bean:createFlightConnectionGetListRequest"/>
+    <to id="BAPI_FLCONN_GETLIST" uri="sap-srfc-destination:flbkdemoDest:BAPI_FLCONN_GETLIST"/>
+    <to id="createFlightConnectionGetDetailRequest" uri="bean:createFlightConnectionGetDetailRequest"/>
+    <to id="BAPI_FLCONN_GETDETAIL" uri="sap-srfc-destination:flbkdemoDest:BAPI_FLCONN_GETDETAIL"/>
+    <to id="returnFlightConnectionInfo" uri="bean:returnFlightConnectionInfo"/>
+  </route>
+  <route id="flight-booking-demo-get-customern-info-route">
+    <from uri="direct:getFlightCustomerInfo"/>
+    <to id="createFlightCustomerGetListRequest" uri="bean:createFlightCustomerGetListRequest"/>
+    <to id="BAPI_FLCUST_GETLIST" uri="sap-srfc-destination:flbkdemoDest:BAPI_FLCUST_GETLIST"/>
+    <to id="returnFlightCustomerInfo" uri="bean:returnFlightCustomerInfo"/>
+  </route>
+  <route id="flight-booking-demo-get-passenger-info-route">
+    <from uri="direct:getPassengerInfo"/>
+    <to id="returnPassengerInfo" uri="bean:returnPassengerInfo"/>
+  </route>
+  <route id="flight-booking-demo-create-flight-booking-route">
+    <from uri="direct:createFlightTrip"/>
+    <to id="createFlightTripRequest" uri="bean:createFlightTripRequest"/>
+    <to id="BAPI_FLTRIP_CREATE" uri="sap-trfc-destination:flbkdemoDest:BAPI_FLTRIP_CREATE"/>
+    <to id="returnFlightTripResponse" uri="bean:returnFlightTripResponse"/>
+  </route>
+</camelContext>
 
 	<!-- Create interceptor to support tRFC processing -->
 	<bean id="currentProcessorDefinitionInterceptor"
@@ -92,7 +78,7 @@
         class="org.jboss.fuse.sap.flightbookingdemo.processor.CreateFlightCustomerGetListRequest"/>
     <bean id="createFlightTripRequest"
         class="org.jboss.fuse.sap.flightbookingdemo.processor.CreateFlightTripRequest"/>
-     <bean id="returnFlightTripResponse"
+    <bean id="returnFlightTripResponse"
         class="org.jboss.fuse.sap.flightbookingdemo.processor.ReturnFlightTripResponse"/>
     <bean id="returnPassengerInfo"
         class="org.jboss.fuse.sap.flightbookingdemo.processor.ReturnPassengerInfo" />

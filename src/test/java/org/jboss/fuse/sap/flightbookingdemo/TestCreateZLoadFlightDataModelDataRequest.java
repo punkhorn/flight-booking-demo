@@ -9,7 +9,6 @@ import org.fusesource.camel.component.sap.model.rfc.Table;
 import org.fusesource.camel.component.sap.util.ComponentDestinationDataProvider;
 import org.fusesource.camel.component.sap.util.RfcUtil;
 import org.jboss.fuse.sap.flightbookingdemo.processor.CreateZLoadFlightDataModelDataRequest;
-import org.junit.Test;
 
 import com.sap.conn.jco.JCoDestination;
 import com.sap.conn.jco.JCoDestinationManager;
